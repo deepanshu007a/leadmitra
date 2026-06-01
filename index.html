@@ -1,0 +1,4468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LeadMitra — free lead management for Indian MSMEs. Track leads, schedule follow-ups, send WhatsApp, draft AI messages in English, Hindi, or Hinglish.">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="LeadMitra">
+    <meta property="og:title" content="LeadMitra — Lead Management for Indian MSMEs">
+    <meta property="og:description" content="Free, browser-based lead tracker with WhatsApp and AI-assisted follow-ups in English, Hindi, and Hinglish.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="LeadMitra — Lead Management for Indian MSMEs">
+    <meta name="twitter:description" content="Free, browser-based lead tracker with WhatsApp and AI-assisted follow-ups in English, Hindi, and Hinglish.">
+    <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232563eb'/><text x='50' y='66' font-size='56' text-anchor='middle' fill='white' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-weight='700'>L</text></svg>">
+    <title>LeadMitra - Lead Management Software</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS RESET & BASE STYLES
+           ======================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors */
+            --primary: #2563eb;
+            --primary-hover: #1e40af;
+            --primary-light: #dbeafe;
+
+            /* Status Colors */
+            --hot: #dc2626;
+            --hot-bg: #fef2f2;
+            --warm: #f59e0b;
+            --warm-bg: #fffbeb;
+            --cold: #64748b;
+            --cold-bg: #f1f5f9;
+            --new: #2563eb;
+            --new-bg: #dbeafe;
+            --converted: #16a34a;
+            --converted-bg: #f0fdf4;
+            --lost: #94a3b8;
+            --lost-bg: #f8fafc;
+            --overdue: #dc2626;
+
+            /* Background & Surface */
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-sidebar: #1e293b;
+            --bg-sidebar-hover: #334155;
+
+            /* Text Colors */
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #ffffff;
+
+            /* Borders */
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+
+            /* WhatsApp Brand */
+            --whatsapp: #25D366;
+            --whatsapp-hover: #128C7E;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+
+            /* Spacing */
+            --sidebar-width: 260px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        /* ========================================
+           LAYOUT
+           ======================================== */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            color: var(--text-light);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-sidebar-hover);
+            color: var(--text-light);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: var(--text-light);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text-light);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 200;
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+
+        /* ========================================
+           CARDS & STATS
+           ======================================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .stat-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-card-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .stat-card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-card-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Stat Card Colors */
+        .stat-card.total .stat-card-icon { background: var(--primary-light); color: var(--primary); }
+        .stat-card.total .stat-card-value { color: var(--primary); }
+        .stat-card.hot .stat-card-icon { background: var(--hot-bg); color: var(--hot); }
+        .stat-card.hot .stat-card-value { color: var(--hot); }
+        .stat-card.warm .stat-card-icon { background: var(--warm-bg); color: var(--warm); }
+        .stat-card.warm .stat-card-value { color: var(--warm); }
+        .stat-card.cold .stat-card-icon { background: var(--cold-bg); color: var(--cold); }
+        .stat-card.cold .stat-card-value { color: var(--cold); }
+        .stat-card.due-today .stat-card-icon { background: #fff7ed; color: #ea580c; }
+        .stat-card.due-today .stat-card-value { color: #ea580c; }
+        .stat-card.converted .stat-card-icon { background: var(--converted-bg); color: var(--converted); }
+        .stat-card.converted .stat-card-value { color: var(--converted); }
+        .stat-card.lost .stat-card-icon { background: var(--lost-bg); color: var(--lost); }
+        .stat-card.lost .stat-card-value { color: var(--lost); }
+
+        /* ========================================
+           BUTTONS
+           ======================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-main);
+        }
+
+        .btn-success {
+            background: var(--converted);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-danger {
+            background: var(--hot);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-whatsapp {
+            background: var(--whatsapp);
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: var(--whatsapp-hover);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 8px;
+        }
+
+        /* ========================================
+           TABLES
+           ======================================== */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            background: var(--bg-main);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--bg-main);
+        }
+
+        /* ========================================
+           BADGES
+           ======================================== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-hot { background: var(--hot-bg); color: var(--hot); }
+        .badge-warm { background: var(--warm-bg); color: var(--warm); }
+        .badge-cold { background: var(--cold-bg); color: var(--cold); }
+        .badge-new { background: var(--new-bg); color: var(--new); }
+        .badge-converted { background: var(--converted-bg); color: var(--converted); }
+        .badge-lost { background: var(--lost-bg); color: var(--lost); text-decoration: line-through; }
+        .badge-overdue { background: var(--hot); color: white; }
+
+        /* ========================================
+           FORMS
+           ======================================== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* ========================================
+           MODAL
+           ======================================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--bg-main);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* ========================================
+           SEARCH & FILTERS
+           ======================================== */
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 42px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .filter-select {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 150px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* ========================================
+           PIPELINE VIEW
+           ======================================== */
+        .pipeline-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+
+        .pipeline-column {
+            min-width: 260px;
+            flex: 1;
+        }
+
+        .pipeline-header {
+            padding: 14px 16px;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 0;
+        }
+
+        .pipeline-column.new .pipeline-header { background: var(--new-bg); color: var(--new); }
+        .pipeline-column.hot .pipeline-header { background: var(--hot-bg); color: var(--hot); }
+        .pipeline-column.warm .pipeline-header { background: var(--warm-bg); color: var(--warm); }
+        .pipeline-column.cold .pipeline-header { background: var(--cold-bg); color: var(--cold); }
+        .pipeline-column.converted .pipeline-header { background: var(--converted-bg); color: var(--converted); }
+        .pipeline-column.lost .pipeline-header { background: var(--lost-bg); color: var(--lost); }
+
+        .pipeline-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pipeline-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .pipeline-count {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .pipeline-value {
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .pipeline-body {
+            background: var(--bg-main);
+            border-radius: 0 0 10px 10px;
+            padding: 12px;
+            min-height: 200px;
+        }
+
+        .pipeline-card {
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pipeline-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .pipeline-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .pipeline-card-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .pipeline-card-business {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .pipeline-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pipeline-card-value {
+            font-weight: 600;
+            color: var(--converted);
+        }
+
+        .pipeline-card-date {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .pipeline-card-date.overdue {
+            color: var(--hot);
+            font-weight: 500;
+        }
+
+        .pipeline-empty {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* ========================================
+           FOLLOW-UP CARDS
+           ======================================== */
+        .followup-section {
+            margin-bottom: 32px;
+        }
+
+        .followup-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .followup-section-title .badge {
+            font-size: 12px;
+        }
+
+        .followup-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .followup-card.overdue {
+            border-left: 4px solid var(--hot);
+            background: var(--hot-bg);
+        }
+
+        .followup-card.today {
+            border-left: 4px solid var(--warm);
+        }
+
+        .followup-info {
+            flex: 1;
+        }
+
+        .followup-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .followup-business {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .followup-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .followup-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .followup-meta-item svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .followup-meta-item.overdue {
+            color: var(--hot);
+            font-weight: 500;
+        }
+
+        .followup-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .followup-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .followup-input-group input {
+            width: 180px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        /* ========================================
+           EMPTY STATE
+           ======================================== */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            color: var(--border);
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        /* ========================================
+           UTILITY
+           ======================================== */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-success { color: var(--converted); }
+        .text-danger { color: var(--hot); }
+        .text-warning { color: var(--warm); }
+        .text-muted { color: var(--text-secondary); }
+
+        .mt-16 { margin-top: 16px; }
+        .mb-16 { margin-bottom: 16px; }
+        .mb-24 { margin-bottom: 24px; }
+
+        .rupee::before {
+            content: '\20B9';
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 1024px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+                padding-top: 80px;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .overlay.active {
+                display: block;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-input-wrapper {
+                min-width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+
+            .followup-card {
+                flex-direction: column;
+            }
+
+            .followup-actions {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .followup-input-group {
+                width: 100%;
+            }
+
+            .followup-input-group input {
+                flex: 1;
+            }
+
+            .pipeline-container {
+                flex-direction: column;
+            }
+
+            .pipeline-column {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+        }
+
+        /* ========================================
+           AI ASSISTANT
+           ======================================== */
+
+        /* AI sparkle button (used inline + on AI view) */
+        .btn-ai {
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            color: #6d28d9;
+            border: 1px solid #c4b5fd;
+        }
+        .btn-ai:hover {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border-color: #a78bfa;
+        }
+
+        /* AI key status banner */
+        .ai-key-banner {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--border);
+        }
+        .ai-key-banner.connected {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #15803d;
+        }
+        .ai-key-banner.empty {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #fcd34d;
+            color: #92400e;
+        }
+        .ai-key-banner-content {
+            flex: 1;
+        }
+        .ai-key-banner-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .ai-key-banner-sub {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .ai-key-banner button {
+            background: rgba(255,255,255,0.6);
+            border: 1px solid currentColor;
+            color: inherit;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .ai-key-banner button:hover {
+            background: rgba(255,255,255,0.9);
+        }
+
+        /* AI key input panel */
+        .ai-key-panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .ai-key-panel label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .ai-key-panel input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'SF Mono', Menlo, monospace;
+            margin-bottom: 12px;
+        }
+        .ai-key-panel input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .ai-key-panel .key-status {
+            font-size: 13px;
+            margin-top: 8px;
+            min-height: 20px;
+        }
+        .ai-key-panel .key-status.success { color: var(--converted); }
+        .ai-key-panel .key-status.error { color: var(--hot); }
+        .ai-key-panel .key-status.testing { color: var(--text-secondary); }
+
+        /* AI Assistant section card */
+        .ai-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+        .ai-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-section-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* Briefing output */
+        .briefing-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .briefing-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+        .briefing-item.priority-1 { border-left-color: var(--hot); }
+        .briefing-item.priority-2 { border-left-color: var(--warm); }
+        .briefing-item.priority-3 { border-left-color: var(--primary); }
+        .briefing-item-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        .briefing-item.priority-1 .briefing-item-num { color: var(--hot); border-color: var(--hot); }
+        .briefing-item.priority-2 .briefing-item-num { color: var(--warm); border-color: var(--warm); }
+        .briefing-item-content { flex: 1; }
+        .briefing-item-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .briefing-item-reason {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .briefing-item-action {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .briefing-insight {
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%);
+            border-radius: 8px;
+            font-size: 13px;
+            color: #5b21b6;
+            border: 1px solid #c4b5fd;
+        }
+        .briefing-insight strong { color: #4c1d95; }
+        .briefing-slipping {
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: var(--hot-bg);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--hot);
+            border: 1px solid #fecaca;
+        }
+        .briefing-slipping strong { color: #991b1b; }
+
+        /* Loading dots */
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+            animation: dot-bounce 1.2s infinite ease-in-out;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* AI draft modal */
+        .ai-modal {
+            max-width: 640px;
+        }
+        .ai-draft-block {
+            margin-bottom: 16px;
+        }
+        .ai-draft-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ai-draft-textarea {
+            width: 100%;
+            min-height: 90px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            background: var(--bg-main);
+            line-height: 1.5;
+        }
+        .ai-draft-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+        .ai-draft-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .ai-modal-context {
+            padding: 12px 14px;
+            background: var(--bg-main);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .ai-modal-context-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .ai-modal-context-row:last-child { margin-bottom: 0; }
+        .ai-modal-context-label {
+            color: var(--text-secondary);
+            min-width: 100px;
+        }
+
+        /* Custom instructions textarea */
+        .ai-instructions-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .ai-instructions-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .ai-instructions-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .ai-instructions-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .ai-instructions-footer a:hover { text-decoration: underline; }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            background: var(--text-primary);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9999;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            max-width: 360px;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.error { background: var(--hot); }
+        .toast.success { background: var(--converted); }
+        .toast.warning { background: var(--warm); }
+
+        /* Provider switcher (inline dropdown next to the banner) */
+        .ai-provider-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-provider-switcher select {
+            padding: 4px 8px;
+            border: 1px solid currentColor;
+            background: rgba(255,255,255,0.7);
+            color: inherit;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .ai-provider-switcher select:focus {
+            outline: none;
+            background: white;
+        }
+
+        /* Saved keys list in the key modal */
+        .ai-saved-list {
+            margin-top: 16px;
+            margin-bottom: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .ai-saved-list-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .ai-saved-list-empty {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        .ai-saved-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: var(--bg-main);
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .ai-saved-item.active {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        .ai-saved-item-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .ai-saved-item-model {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: 'SF Mono', Menlo, monospace;
+        }
+        .ai-saved-item-use {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .ai-saved-item-use:hover {
+            background: var(--bg-main);
+        }
+        .ai-saved-item-remove {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1;
+        }
+        .ai-saved-item-remove:hover {
+            background: var(--hot-bg);
+            color: var(--hot);
+        }
+        .ai-saved-item-active-badge {
+            font-size: 11px;
+            color: var(--converted);
+            font-weight: 600;
+        }
+
+        /* Key modal form rows */
+        .ai-key-form-row {
+            margin-bottom: 12px;
+        }
+        .ai-key-form-row label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .ai-key-form-row select,
+        .ai-key-form-row input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+        }
+        .ai-key-form-row input {
+            font-family: 'SF Mono', Menlo, monospace;
+        }
+        .ai-key-form-row select:focus,
+        .ai-key-form-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .ai-key-form-hint {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .ai-key-form-hint a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .ai-key-form-hint a:hover { text-decoration: underline; }
+
+        /* ========================================
+           LANGUAGE SEGMENTED CONTROL
+           ======================================== */
+        .lang-segmented {
+            display: inline-flex;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+        .lang-segmented button {
+            padding: 6px 14px;
+            background: white;
+            border: none;
+            border-right: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .lang-segmented button:last-child {
+            border-right: none;
+        }
+        .lang-segmented button:hover {
+            background: var(--bg-main);
+            color: var(--text-primary);
+        }
+        .lang-segmented button.active {
+            background: var(--primary);
+            color: white;
+        }
+        .lang-segmented.compact button {
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+
+        /* ========================================
+           QUICK REPLY, CADENCE, CHIP MODAL
+           ======================================== */
+
+        /* Cadence table */
+        .cadence-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 16px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+        .cadence-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cadence-row label {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+        .cadence-row input {
+            width: 60px;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            font-family: inherit;
+        }
+        .cadence-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .cadence-row .cadence-unit {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .cadence-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-height: 16px;
+            margin-top: 4px;
+        }
+        .cadence-status.success { color: var(--converted); }
+
+        /* Chip modal (after follow-up note) */
+        .chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+        .chip {
+            padding: 10px 14px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            font-weight: 500;
+        }
+        .chip:hover {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border-color: #a78bfa;
+            color: #5b21b6;
+        }
+        .chip-icon {
+            margin-right: 4px;
+        }
+
+        /* Inline cadence-suggestion banner in follow-up card */
+        .cadence-suggestion {
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #075985;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .cadence-suggestion-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .cadence-suggestion-text strong { color: #0c4a6e; }
+        .cadence-suggestion button {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid currentColor;
+            background: white;
+        }
+        .cadence-suggestion .apply {
+            color: var(--converted);
+        }
+        .cadence-suggestion .apply:hover {
+            background: #f0fdf4;
+        }
+        .cadence-suggestion .keep {
+            color: var(--text-secondary);
+        }
+        .cadence-suggestion .keep:hover {
+            background: var(--bg-main);
+        }
+
+        /* ========================================
+           WELCOME OVERLAY
+           ======================================== */
+        .welcome-modal {
+            max-width: 480px;
+            text-align: center;
+        }
+        .welcome-modal .modal-body {
+            padding: 32px 28px 20px;
+        }
+        .welcome-modal .modal-header {
+            justify-content: center;
+            border-bottom: none;
+            padding: 32px 28px 0;
+        }
+        .welcome-modal .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+        }
+        .welcome-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        .welcome-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .welcome-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 20px;
+        }
+        .welcome-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .welcome-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+        .welcome-feature-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .welcome-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .welcome-note {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 14px;
+        }
+
+        /* ========================================
+           SIDEBAR FOOTER BUTTON ROW (export / import)
+           ======================================== */
+        .sidebar-footer-actions {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .sidebar-footer-actions .reset-btn {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 12px;
+        }
+        .reset-btn-icon {
+            font-size: 14px;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome overlay (one-time, first visit) -->
+    <div class="modal-overlay" id="welcome-modal">
+        <div class="modal welcome-modal" style="position: relative;">
+            <button class="modal-close" onclick="dismissWelcome()" aria-label="Close" title="Close">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="modal-header">
+                <div class="welcome-icon">📋</div>
+            </div>
+            <div class="modal-body">
+                <h2 class="welcome-title">Welcome to LeadMitra</h2>
+                <p class="welcome-subtitle">A simple, free lead tracker for Indian business owners. Everything stays in your browser — no signup, no servers, no cost.</p>
+                <div class="welcome-features">
+                    <div class="welcome-feature">
+                        <span class="welcome-feature-icon">📒</span>
+                        <span>Track leads, follow-ups, and your sales pipeline</span>
+                    </div>
+                    <div class="welcome-feature">
+                        <span class="welcome-feature-icon">💬</span>
+                        <span>One-tap WhatsApp messages with pre-filled text</span>
+                    </div>
+                    <div class="welcome-feature">
+                        <span class="welcome-feature-icon">✨</span>
+                        <span>Optional AI drafts in English, Hindi, or Hinglish</span>
+                    </div>
+                </div>
+                <div class="welcome-actions">
+                    <button class="btn btn-primary" onclick="startWithDemo()">
+                        🚀 Start with demo data
+                    </button>
+                    <button class="btn btn-secondary" onclick="startFresh()">
+                        ✨ Start with empty data
+                    </button>
+                </div>
+                <p class="welcome-note">You can also export / import your data any time from the sidebar.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18"/>
+            </svg>
+        </button>
+
+        <!-- Overlay for mobile -->
+        <div class="overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">📋</div>
+                    <div class="logo-text">
+                        <h1>LeadMitra</h1>
+                        <span>Lead Management</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-view="dashboard" onclick="showView('dashboard')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a class="nav-item" data-view="add-lead" onclick="showView('add-lead')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span>Add New Lead</span>
+                </a>
+                <a class="nav-item" data-view="all-leads" onclick="showView('all-leads')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                    </svg>
+                    <span>All Leads</span>
+                </a>
+                <a class="nav-item" data-view="followups" onclick="showView('followups')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Follow-ups</span>
+                </a>
+                <a class="nav-item" data-view="pipeline" onclick="showView('pipeline')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+                    </svg>
+                    <span>Pipeline</span>
+                </a>
+                <a class="nav-item" data-view="ai" onclick="showView('ai')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                    </svg>
+                    <span>AI Assistant</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-footer-actions">
+                    <button class="reset-btn" onclick="exportLeads()" title="Download all your data as a JSON file">
+                        <span class="reset-btn-icon">⬇</span> Export
+                    </button>
+                    <button class="reset-btn" onclick="document.getElementById('import-file-input').click()" title="Import data from a JSON backup">
+                        <span class="reset-btn-icon">⬆</span> Import
+                    </button>
+                    <input type="file" id="import-file-input" accept=".json,application/json" style="display:none" onchange="importLeads(event)">
+                </div>
+                <button class="reset-btn" onclick="resetDemoData()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 8m0 0h5m-5 0v5m0-5h-5m5 0a8.001 8.001 0 01-7.358 4.418M12 12V8m0 0a8.001 8.001 0 017.358-4.418M12 12v4.582m0 0a8 8 0 00-7.358-4.418"/>
+                    </svg>
+                    Reset Demo Data
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Welcome back! Here's your lead overview.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showView('add-lead')">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add New Lead
+                    </button>
+                </div>
+
+                <div class="stats-grid" id="stats-grid">
+                    <!-- Stats will be populated by JS -->
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Leads</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="showView('all-leads')">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Value</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-leads-table">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Follow-ups Today</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="showView('followups')">View All</button>
+                        </div>
+                        <div class="card-body" id="today-followups-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Lead View -->
+            <div id="add-lead-view" class="view hidden">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" id="form-title">Add New Lead</h1>
+                        <p class="page-subtitle">Enter the customer details below.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="padding: 24px;">
+                        <form id="lead-form" onsubmit="saveLead(event)">
+                            <input type="hidden" id="lead-id">
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Customer Name *</label>
+                                    <input type="text" class="form-input" id="customerName" required placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Mobile Number *</label>
+                                    <input type="tel" class="form-input" id="mobile" required placeholder="10 digit mobile number" maxlength="10" pattern="[0-9]{10}">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Business Name</label>
+                                    <input type="text" class="form-input" id="businessName" placeholder="Company or business name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">City</label>
+                                    <select class="form-input" id="city">
+                                        <option value="">Select City</option>
+                                        <option value="Ahmedabad">Ahmedabad</option>
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Chennai">Chennai</option>
+                                        <option value="Coimbatore">Coimbatore</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Hyderabad">Hyderabad</option>
+                                        <option value="Indore">Indore</option>
+                                        <option value="Jaipur">Jaipur</option>
+                                        <option value="Kolkata">Kolkata</option>
+                                        <option value="Lucknow">Lucknow</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Nagpur">Nagpur</option>
+                                        <option value="Nashik">Nashik</option>
+                                        <option value="Pune">Pune</option>
+                                        <option value="Surat">Surat</option>
+                                        <option value="Thane">Thane</option>
+                                        <option value="Vadodara">Vadodara</option>
+                                        <option value="Varanasi">Varanasi</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Lead Source</label>
+                                    <select class="form-input" id="source">
+                                        <option value="">Select Source</option>
+                                        <option value="WhatsApp">WhatsApp</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Referral">Referral</option>
+                                        <option value="Website">Website</option>
+                                        <option value="Walk-in">Walk-in</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Product/Service Interest</label>
+                                    <input type="text" class="form-input" id="productInterest" placeholder="What are they interested in?">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Estimated Value (₹)</label>
+                                    <input type="number" class="form-input" id="estimatedValue" placeholder="50000" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Lead Status</label>
+                                    <select class="form-input" id="status">
+                                        <option value="new">New</option>
+                                        <option value="hot">Hot</option>
+                                        <option value="warm">Warm</option>
+                                        <option value="cold">Cold</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Follow-up Date</label>
+                                <input type="date" class="form-input" id="followUpDate">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-input" id="notes" placeholder="Add any additional notes about this lead..."></textarea>
+                            </div>
+
+                            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                                <button type="submit" class="btn btn-primary">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Save Lead
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Leads View -->
+            <div id="all-leads-view" class="view hidden">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">All Leads</h1>
+                        <p class="page-subtitle">Manage and track all your leads.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showView('add-lead')">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add Lead
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="padding: 20px;">
+                        <div class="search-bar">
+                            <div class="search-input-wrapper">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.35-4.35"/>
+                                </svg>
+                                <input type="text" class="search-input" id="search-input" placeholder="Search by name, mobile, city, or business..." oninput="filterLeads()">
+                            </div>
+                            <select class="filter-select" id="status-filter" onchange="filterLeads()">
+                                <option value="">All Status</option>
+                                <option value="new">New</option>
+                                <option value="hot">Hot</option>
+                                <option value="warm">Warm</option>
+                                <option value="cold">Cold</option>
+                                <option value="converted">Converted</option>
+                                <option value="lost">Lost</option>
+                            </select>
+                            <select class="filter-select" id="source-filter" onchange="filterLeads()">
+                                <option value="">All Sources</option>
+                                <option value="WhatsApp">WhatsApp</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Referral">Referral</option>
+                                <option value="Website">Website</option>
+                                <option value="Walk-in">Walk-in</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Mobile</th>
+                                        <th>Business</th>
+                                        <th>City</th>
+                                        <th>Source</th>
+                                        <th>Value</th>
+                                        <th>Status</th>
+                                        <th>Follow-up</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leads-table">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="leads-empty" class="empty-state hidden">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                            </svg>
+                            <h3>No leads found</h3>
+                            <p>Try adjusting your search or filters.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Follow-ups View -->
+            <div id="followups-view" class="view hidden">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Follow-ups</h1>
+                        <p class="page-subtitle">Don't miss any important follow-ups!</p>
+                    </div>
+                </div>
+
+                <div class="followup-section" id="overdue-section">
+                    <h3 class="followup-section-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        Overdue Follow-ups
+                        <span class="badge badge-overdue" id="overdue-count">0</span>
+                    </h3>
+                    <div id="overdue-followups">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="followup-section" id="today-section">
+                    <h3 class="followup-section-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Today's Follow-ups
+                        <span class="badge badge-warm" id="today-count">0</span>
+                    </h3>
+                    <div id="today-followups">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="followup-section" id="upcoming-section">
+                    <h3 class="followup-section-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Upcoming Follow-ups
+                        <span class="badge badge-new" id="upcoming-count">0</span>
+                    </h3>
+                    <div id="upcoming-followups">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline View -->
+            <div id="pipeline-view" class="view hidden">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Lead Pipeline</h1>
+                        <p class="page-subtitle">Visual overview of your sales pipeline.</p>
+                    </div>
+                </div>
+
+                <div class="pipeline-container" id="pipeline-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- AI Assistant View -->
+            <div id="ai-view" class="view hidden">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">AI Assistant</h1>
+                        <p class="page-subtitle">Let Claude help you prioritize and message your leads.</p>
+                    </div>
+                </div>
+
+                <!-- API key status banner -->
+                <div id="ai-key-banner"></div>
+
+                <!-- Daily Briefing Section -->
+                <div class="ai-section">
+                    <div class="ai-section-title">📊 Daily Briefing</div>
+                    <p class="ai-section-subtitle">Get a quick read on what to focus on today.</p>
+                    <button class="btn btn-primary" id="briefing-btn" onclick="getBriefing()">
+                        ✨ What should I do today?
+                    </button>
+                    <div id="briefing-output" style="margin-top: 16px;"></div>
+                </div>
+
+                <!-- Draft a Message Section -->
+                <div class="ai-section">
+                    <div class="ai-section-title">✍️ Draft a Message</div>
+                    <p class="ai-section-subtitle">Pick a lead, choose a language, and let Claude write a first outreach or a follow-up.</p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px;">
+                        <select class="filter-select" id="ai-lead-select" style="flex: 1; min-width: 200px;">
+                            <option value="">Choose a lead...</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        <div class="lang-segmented compact" id="ai-lang-picker">
+                            <button type="button" data-lang="english" onclick="pickDraftLanguage('english')">English</button>
+                            <button type="button" data-lang="hindi" onclick="pickDraftLanguage('hindi')">हिंदी</button>
+                            <button type="button" data-lang="hinglish" onclick="pickDraftLanguage('hinglish')">Hinglish</button>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-ai" onclick="draftFirstMessage()">✨ First message</button>
+                            <button class="btn btn-ai" onclick="draftFollowup()">✨ Follow-up</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Instructions Section -->
+                <div class="ai-section">
+                    <div class="ai-section-title">⚙️ Custom Instructions</div>
+                    <p class="ai-section-subtitle">Tell Claude about your business, your tone, your products. These instructions are sent with every AI request.</p>
+
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;">
+                        <span style="font-size: 13px; font-weight: 500; color: var(--text-primary);">Default language for drafts:</span>
+                        <div class="lang-segmented compact" id="ai-default-lang">
+                            <button type="button" data-lang="english" onclick="pickDefaultLanguage('english')">English</button>
+                            <button type="button" data-lang="hindi" onclick="pickDefaultLanguage('hindi')">हिंदी</button>
+                            <button type="button" data-lang="hinglish" onclick="pickDefaultLanguage('hinglish')">Hinglish</button>
+                        </div>
+                    </div>
+
+                    <textarea class="ai-instructions-textarea" id="ai-system-prompt" placeholder="Loading..."></textarea>
+                    <div class="ai-instructions-footer">
+                        <span id="ai-instructions-status"></span>
+                        <a onclick="resetSystemPrompt()">Reset to default</a>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <button class="btn btn-primary btn-sm" onclick="saveSystemPrompt()">Save instructions</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Delete Lead?</h3>
+                <button class="modal-close" onclick="closeDeleteModal()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this lead? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Draft Modal -->
+    <div class="modal-overlay" id="ai-modal">
+        <div class="modal ai-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ai-modal-title">✨ AI Draft</h3>
+                <button class="modal-close" onclick="closeAIModal()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ai-modal-context" class="ai-modal-context"></div>
+                <div id="ai-modal-drafts"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAIModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Key Modal -->
+    <div class="modal-overlay" id="ai-key-modal">
+        <div class="modal" style="max-width: 520px;">
+            <div class="modal-header">
+                <h3 class="modal-title">🔑 AI Provider Settings</h3>
+                <button class="modal-close" onclick="closeKeyModal()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="ai-key-form-row">
+                    <label for="ai-provider-select">Provider</label>
+                    <select id="ai-provider-select" onchange="onProviderChange()"></select>
+                </div>
+                <div class="ai-key-form-row">
+                    <label for="ai-key-input">API Key</label>
+                    <input type="password" id="ai-key-input" placeholder="paste your API key">
+                    <div class="ai-key-form-hint" id="ai-key-hint"></div>
+                </div>
+                <div class="ai-key-form-row">
+                    <label for="ai-model-select">Model</label>
+                    <select id="ai-model-select"></select>
+                </div>
+                <div id="ai-key-modal-status" class="key-status" style="font-size: 13px; margin-top: 8px; min-height: 20px;"></div>
+
+                <div class="ai-saved-list">
+                    <div class="ai-saved-list-label">Saved keys</div>
+                    <div id="ai-saved-list"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeKeyModal()">Cancel</button>
+                <button class="btn btn-primary" id="ai-key-save-btn" onclick="saveAndTestKey()">Save & Test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ========================================
+        // DATA STORAGE & CONSTANTS
+        // ========================================
+        const STORAGE_KEY = 'leadmitra_leads';
+
+        // Demo data for Indian business leads
+        const DEMO_DATA = [
+            {
+                id: generateId(),
+                customerName: 'Rajesh Kumar Agarwal',
+                mobile: '9829012345',
+                businessName: 'Agarwal Textiles',
+                city: 'Mumbai',
+                source: 'WhatsApp',
+                productInterest: 'Cotton Fabric - Bulk Order',
+                estimatedValue: 250000,
+                status: 'hot',
+                followUpDate: getTodayDate(),
+                notes: 'Interested in bulk cotton fabric for his retail store. Budget around 2-3 lakhs.',
+                createdAt: getRandomDate(-5),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Priya Sharma',
+                mobile: '9876543210',
+                businessName: 'Sharma Electronics',
+                city: 'Delhi',
+                source: 'Instagram',
+                productInterest: 'LED Televisions',
+                estimatedValue: 180000,
+                status: 'warm',
+                followUpDate: getDateOffset(2),
+                notes: 'Looking for LED TVs for her electronics showroom.',
+                createdAt: getRandomDate(-10),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Anil Patel',
+                mobile: '9827654321',
+                businessName: 'Patel Machinery Works',
+                city: 'Ahmedabad',
+                source: 'Referral',
+                productInterest: 'Industrial Lathe Machine',
+                estimatedValue: 450000,
+                status: 'hot',
+                followUpDate: getTodayDate(),
+                notes: 'Referred by Ramesh Bhai. Needs lathe machine for his workshop expansion.',
+                createdAt: getRandomDate(-3),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Meena Gupta',
+                mobile: '9812345678',
+                businessName: 'Gupta Stationery Mart',
+                city: 'Jaipur',
+                source: 'Walk-in',
+                productInterest: 'Office Supplies',
+                estimatedValue: 35000,
+                status: 'warm',
+                followUpDate: getDateOffset(1),
+                notes: 'Visited our stall at trade fair. Interested in bulk order.',
+                createdAt: getRandomDate(-7),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Vikram Singh',
+                mobile: '9898765432',
+                businessName: 'Singh Logistics',
+                city: 'Pune',
+                source: 'Website',
+                productInterest: 'GPS Tracking System',
+                estimatedValue: 75000,
+                status: 'new',
+                followUpDate: getDateOffset(5),
+                notes: 'Found us through Google search. Wants GPS for his fleet.',
+                createdAt: getRandomDate(-2),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Sunita Verma',
+                mobile: '9823456789',
+                businessName: 'Verma Beauty Products',
+                city: 'Lucknow',
+                source: 'Facebook',
+                productInterest: 'Cosmetic Raw Materials',
+                estimatedValue: 95000,
+                status: 'cold',
+                followUpDate: getDateOffset(-3),
+                notes: 'Not responding to calls. Need to try WhatsApp message.',
+                createdAt: getRandomDate(-20),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Arun Joshi',
+                mobile: '9876123456',
+                businessName: 'Joshi Hardware Store',
+                city: 'Nagpur',
+                source: 'Referral',
+                productInterest: 'Power Tools Kit',
+                estimatedValue: 55000,
+                status: 'converted',
+                followUpDate: null,
+                notes: 'Deal closed! Will be ordering again in 3 months.',
+                createdAt: getRandomDate(-30),
+                updatedAt: getTodayDate(),
+                followUps: [{ date: getDateOffset(-5), note: 'Confirmed order. Will pay advance next week.' }]
+            },
+            {
+                id: generateId(),
+                customerName: 'Kavita Desai',
+                mobile: '9856781234',
+                businessName: 'Desai Garments',
+                city: 'Surat',
+                source: 'WhatsApp',
+                productInterest: 'Silk Sarees',
+                estimatedValue: 120000,
+                status: 'warm',
+                followUpDate: getTodayDate(),
+                notes: 'Interested in premium silk sarees for festive season.',
+                createdAt: getRandomDate(-8),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Mohan Thakur',
+                mobile: '9834567890',
+                businessName: 'Thakur Auto Parts',
+                city: 'Bangalore',
+                source: 'Instagram',
+                productInterest: 'Car Spare Parts',
+                estimatedValue: 85000,
+                status: 'lost',
+                followUpDate: getDateOffset(-10),
+                notes: 'Ordered from competitor. Price sensitive.',
+                createdAt: getRandomDate(-45),
+                updatedAt: getTodayDate(),
+                followUps: [{ date: getDateOffset(-15), note: 'Got better quote from local supplier.' }]
+            },
+            {
+                id: generateId(),
+                customerName: 'Lakshmi Narayanan',
+                mobile: '9845678901',
+                businessName: 'LN Enterprises',
+                city: 'Chennai',
+                source: 'Website',
+                productInterest: 'Computer Hardware',
+                estimatedValue: 200000,
+                status: 'hot',
+                followUpDate: getDateOffset(1),
+                notes: 'Setting up new office. Needs complete IT infrastructure.',
+                createdAt: getRandomDate(-4),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Harish Mehta',
+                mobile: '9867890123',
+                businessName: 'MehtaSteel Traders',
+                city: 'Vadodara',
+                source: 'Referral',
+                productInterest: 'Steel Pipes',
+                estimatedValue: 500000,
+                status: 'warm',
+                followUpDate: getDateOffset(3),
+                notes: 'Major construction project. Needs regular supply.',
+                createdAt: getRandomDate(-6),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Neha Agarwal',
+                mobile: '9801234567',
+                businessName: 'Agarwal Packers',
+                city: 'Indore',
+                source: 'Facebook',
+                productInterest: 'Packing Materials',
+                estimatedValue: 45000,
+                status: 'new',
+                followUpDate: getDateOffset(7),
+                notes: 'Expanding her packing business.',
+                createdAt: getRandomDate(-1),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Suresh Reddy',
+                mobile: '9812349876',
+                businessName: 'Reddy Constructions',
+                city: 'Hyderabad',
+                source: 'Walk-in',
+                productInterest: 'Cement & Bricks',
+                estimatedValue: 350000,
+                status: 'warm',
+                followUpDate: getDateOffset(2),
+                notes: 'Has 3 ongoing projects. Regular bulk requirements.',
+                createdAt: getRandomDate(-12),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Deepak Vyas',
+                mobile: '9878901234',
+                businessName: 'Vyas Pharma',
+                city: 'Kolkata',
+                source: 'WhatsApp',
+                productInterest: 'Pharmaceutical Packaging',
+                estimatedValue: 150000,
+                status: 'hot',
+                followUpDate: getTodayDate(),
+                notes: 'Urgent requirement for medicine packaging materials.',
+                createdAt: getRandomDate(-2),
+                updatedAt: getTodayDate(),
+                followUps: []
+            },
+            {
+                id: generateId(),
+                customerName: 'Pooja Shah',
+                mobile: '9823678901',
+                businessName: 'Shah Boutique',
+                city: 'Pune',
+                source: 'Instagram',
+                productInterest: 'Designer Fabrics',
+                estimatedValue: 65000,
+                status: 'warm',
+                followUpDate: getDateOffset(4),
+                notes: 'Looking for unique designer fabrics for her boutique.',
+                createdAt: getRandomDate(-9),
+                updatedAt: getTodayDate(),
+                followUps: []
+            }
+        ];
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        function generateId() {
+            return 'lead_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function getTodayDate() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function getDateOffset(days) {
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            return date.toISOString().split('T')[0];
+        }
+
+        function getRandomDate(daysAgo) {
+            const date = new Date();
+            date.setDate(date.getDate() - Math.floor(Math.random() * daysAgo));
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatCurrency(amount) {
+            if (!amount || amount === 0) return '-';
+            return '₹' + Number(amount).toLocaleString('en-IN');
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function getDaysUntil(dateStr) {
+            if (!dateStr) return null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const target = new Date(dateStr);
+            target.setHours(0, 0, 0, 0);
+            const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+            return diff;
+        }
+
+        function getStatusBadgeClass(status) {
+            const classes = {
+                'new': 'badge-new',
+                'hot': 'badge-hot',
+                'warm': 'badge-warm',
+                'cold': 'badge-cold',
+                'converted': 'badge-converted',
+                'lost': 'badge-lost'
+            };
+            return classes[status] || 'badge-new';
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'new': 'New',
+                'hot': 'Hot',
+                'warm': 'Warm',
+                'cold': 'Cold',
+                'converted': 'Converted',
+                'lost': 'Lost'
+            };
+            return labels[status] || status;
+        }
+
+        function getSourceIcon(source) {
+            const icons = {
+                'WhatsApp': '💬',
+                'Instagram': '📷',
+                'Facebook': '📘',
+                'Referral': '👥',
+                'Website': '🌐',
+                'Walk-in': '🚶',
+                'Other': '📝'
+            };
+            return icons[source] || '📝';
+        }
+
+        // ========================================
+        // DATA MANAGEMENT
+        // ========================================
+        function getLeads() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            // Load demo data if nothing stored
+            saveLeads(DEMO_DATA);
+            return DEMO_DATA;
+        }
+
+        function saveLeads(leads) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
+        }
+
+        function resetDemoData() {
+            if (confirm('This will reset all data and load demo leads. Continue?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                saveLeads(DEMO_DATA);
+                showView('dashboard');
+                renderAll();
+            }
+        }
+
+        // ========================================
+        // VIEW MANAGEMENT
+        // ========================================
+        function showView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+
+            // Show selected view
+            document.getElementById(viewName + '-view').classList.remove('hidden');
+
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector(`.nav-item[data-view="${viewName}"]`)?.classList.add('active');
+
+            // Render view content
+            renderView(viewName);
+
+            // Close mobile sidebar
+            closeSidebar();
+        }
+
+        function renderView(viewName) {
+            switch(viewName) {
+                case 'dashboard':
+                    renderDashboard();
+                    break;
+                case 'all-leads':
+                    renderLeadsTable();
+                    break;
+                case 'followups':
+                    renderFollowups();
+                    break;
+                case 'pipeline':
+                    renderPipeline();
+                    break;
+                case 'ai':
+                    renderAIView();
+                    break;
+            }
+        }
+
+        // ========================================
+        // RENDER FUNCTIONS
+        // ========================================
+        function renderAll() {
+            const currentView = document.querySelector('.view:not(.hidden)')?.id?.replace('-view', '') || 'dashboard';
+            renderView(currentView);
+        }
+
+        function renderDashboard() {
+            const leads = getLeads();
+            const today = getTodayDate();
+
+            // Calculate stats
+            const total = leads.length;
+            const hot = leads.filter(l => l.status === 'hot').length;
+            const warm = leads.filter(l => l.status === 'warm').length;
+            const cold = leads.filter(l => l.status === 'cold').length;
+            const converted = leads.filter(l => l.status === 'converted').length;
+            const lost = leads.filter(l => l.status === 'lost').length;
+            const dueToday = leads.filter(l => l.followUpDate === today && !['converted', 'lost'].includes(l.status)).length;
+
+            // Stats grid
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = `
+                <div class="stat-card total">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${total}</div>
+                    <div class="stat-card-label">Total Leads</div>
+                </div>
+                <div class="stat-card hot">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+                                <path d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${hot}</div>
+                    <div class="stat-card-label">Hot Leads</div>
+                </div>
+                <div class="stat-card warm">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${warm}</div>
+                    <div class="stat-card-label">Warm Leads</div>
+                </div>
+                <div class="stat-card cold">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${cold}</div>
+                    <div class="stat-card-label">Cold Leads</div>
+                </div>
+                <div class="stat-card due-today">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${dueToday}</div>
+                    <div class="stat-card-label">Due Today</div>
+                </div>
+                <div class="stat-card converted">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${converted}</div>
+                    <div class="stat-card-label">Converted</div>
+                </div>
+                <div class="stat-card lost">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${lost}</div>
+                    <div class="stat-card-label">Lost</div>
+                </div>
+            `;
+
+            // Recent leads table
+            const recentLeads = leads.slice(-10).reverse();
+            const recentTable = document.getElementById('recent-leads-table');
+            recentTable.innerHTML = recentLeads.length ? recentLeads.map(lead => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 500;">${lead.customerName}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">${lead.businessName || '-'}</div>
+                    </td>
+                    <td>${formatCurrency(lead.estimatedValue)}</td>
+                    <td><span class="badge ${getStatusBadgeClass(lead.status)}">${getStatusLabel(lead.status)}</span></td>
+                </tr>
+            `).join('') : '<tr><td colspan="3" style="text-align: center; padding: 24px; color: var(--text-secondary);">No leads yet. Add your first lead!</td></tr>';
+
+            // Today's follow-ups list
+            const todayFollowups = leads.filter(l => l.followUpDate === today && !['converted', 'lost'].includes(l.status));
+            const todayList = document.getElementById('today-followups-list');
+            todayList.innerHTML = todayFollowups.length ? todayFollowups.map(lead => `
+                <div style="padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 500;">${lead.customerName}</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">${lead.productInterest || '-'}</div>
+                    </div>
+                    <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                        <button class="btn btn-sm btn-ai" onclick="inlineDraftFollowup('${lead.id}')" title="AI draft follow-up">✨</button>
+                        <button class="btn btn-sm btn-whatsapp" onclick="openWhatsApp('${lead.mobile}', '${lead.customerName}', '${lead.productInterest}')">
+                            💬
+                        </button>
+                    </div>
+                </div>
+            `).join('') : '<div style="padding: 24px; text-align: center; color: var(--text-secondary);">No follow-ups scheduled for today.</div>';
+        }
+
+        function renderLeadsTable() {
+            const leads = getLeads();
+            const search = document.getElementById('search-input')?.value?.toLowerCase() || '';
+            const statusFilter = document.getElementById('status-filter')?.value || '';
+            const sourceFilter = document.getElementById('source-filter')?.value || '';
+
+            // Filter leads
+            let filtered = leads.filter(lead => {
+                const matchesSearch = !search ||
+                    lead.customerName.toLowerCase().includes(search) ||
+                    lead.mobile.includes(search) ||
+                    (lead.city && lead.city.toLowerCase().includes(search)) ||
+                    (lead.businessName && lead.businessName.toLowerCase().includes(search));
+
+                const matchesStatus = !statusFilter || lead.status === statusFilter;
+                const matchesSource = !sourceFilter || lead.source === sourceFilter;
+
+                return matchesSearch && matchesStatus && matchesSource;
+            });
+
+            // Sort by updated date (newest first)
+            filtered.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+            const tbody = document.getElementById('leads-table');
+            const emptyState = document.getElementById('leads-empty');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                tbody.innerHTML = filtered.map(lead => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 500;">${lead.customerName}</div>
+                            ${lead.businessName ? `<div style="font-size: 12px; color: var(--text-secondary);">${lead.businessName}</div>` : ''}
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span>${lead.mobile}</span>
+                                <a href="tel:${lead.mobile}" class="btn btn-icon btn-secondary btn-sm" title="Call">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                        <td>${lead.city || '-'}</td>
+                        <td>
+                            <span title="${lead.source}">${getSourceIcon(lead.source)} ${lead.source || '-'}</span>
+                        </td>
+                        <td><strong>${formatCurrency(lead.estimatedValue)}</strong></td>
+                        <td><span class="badge ${getStatusBadgeClass(lead.status)}">${getStatusLabel(lead.status)}</span></td>
+                        <td>
+                            ${lead.followUpDate ? formatDate(lead.followUpDate) : '-'}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 4px;">
+                                <button class="btn btn-icon btn-sm btn-whatsapp" onclick="openWhatsApp('${lead.mobile}', '${lead.customerName}', '${lead.productInterest}')" title="WhatsApp">
+                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                    </svg>
+                                </button>
+                                ${!['converted', 'lost'].includes(lead.status) ? `
+                                    <button class="btn btn-icon btn-sm btn-success" onclick="updateLeadStatus('${lead.id}', 'converted')" title="Mark Converted">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-icon btn-sm btn-secondary" onclick="updateLeadStatus('${lead.id}', 'lost')" title="Mark Lost">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                ` : ''}
+                                ${!['converted', 'lost'].includes(lead.status) ? `
+                                    <button class="btn btn-icon btn-sm btn-ai" onclick="inlineDraftMessage('${lead.id}')" title="AI draft message">
+                                        ✨
+                                    </button>
+                                ` : ''}
+                                <button class="btn btn-icon btn-sm btn-secondary" onclick="editLead('${lead.id}')" title="Edit">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </button>
+                                <button class="btn btn-icon btn-sm btn-secondary" onclick="showDeleteModal('${lead.id}')" title="Delete">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderFollowups() {
+            const leads = getLeads();
+            const today = getTodayDate();
+
+            // Categorize leads
+            const overdue = leads.filter(l => {
+                if (!l.followUpDate || ['converted', 'lost'].includes(l.status)) return false;
+                return l.followUpDate < today;
+            });
+
+            const todayFollowups = leads.filter(l => {
+                if (!l.followUpDate || ['converted', 'lost'].includes(l.status)) return false;
+                return l.followUpDate === today;
+            });
+
+            const upcoming = leads.filter(l => {
+                if (!l.followUpDate || ['converted', 'lost'].includes(l.status)) return false;
+                const daysUntil = getDaysUntil(l.followUpDate);
+                return daysUntil !== null && daysUntil > 0 && daysUntil <= 7;
+            });
+
+            // Render sections
+            document.getElementById('overdue-count').textContent = overdue.length;
+            document.getElementById('overdue-followups').innerHTML = overdue.length ? overdue.map(lead => renderFollowupCard(lead, 'overdue')).join('') :
+                '<div class="empty-state"><p>No overdue follow-ups!</p></div>';
+
+            document.getElementById('today-count').textContent = todayFollowups.length;
+            document.getElementById('today-followups').innerHTML = todayFollowups.length ? todayFollowups.map(lead => renderFollowupCard(lead, 'today')).join('') :
+                '<div class="empty-state"><p>No follow-ups for today.</p></div>';
+
+            document.getElementById('upcoming-count').textContent = upcoming.length;
+            document.getElementById('upcoming-followups').innerHTML = upcoming.length ? upcoming.map(lead => renderFollowupCard(lead, 'upcoming')).join('') :
+                '<div class="empty-state"><p>No upcoming follow-ups in the next 7 days.</p></div>';
+        }
+
+        function renderFollowupCard(lead, type) {
+            const daysUntil = getDaysUntil(lead.followUpDate);
+            let dateLabel = '';
+            let dateClass = '';
+
+            if (type === 'overdue') {
+                dateLabel = `${Math.abs(daysUntil)} day${Math.abs(daysUntil) > 1 ? 's' : ''} overdue`;
+                dateClass = 'overdue';
+            } else if (type === 'today') {
+                dateLabel = 'Today';
+                dateClass = '';
+            } else {
+                dateLabel = `In ${daysUntil} day${daysUntil > 1 ? 's' : ''}`;
+                dateClass = '';
+            }
+
+            return `
+                <div class="followup-card ${type}">
+                    <div class="followup-info">
+                        <div class="followup-name">${lead.customerName}</div>
+                        <div class="followup-business">${lead.businessName || '-'}</div>
+                        <div class="followup-meta">
+                            <div class="followup-meta-item ${dateClass}">
+                                <svg fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                ${dateLabel}
+                            </div>
+                            <div class="followup-meta-item">
+                                <svg fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                </svg>
+                                ${lead.mobile}
+                            </div>
+                            ${lead.productInterest ? `
+                                <div class="followup-meta-item">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                    </svg>
+                                    ${lead.productInterest}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="followup-actions">
+                        <div style="display: flex; gap: 6px;">
+                            <button class="btn btn-sm btn-whatsapp" onclick="openWhatsApp('${lead.mobile}', '${lead.customerName}', '${lead.productInterest}')">
+                                💬 WhatsApp
+                            </button>
+                            <button class="btn btn-sm btn-ai" onclick="inlineDraftFollowup('${lead.id}')" title="AI draft follow-up">
+                                ✨ AI
+                            </button>
+                        </div>
+                        <div class="followup-input-group">
+                            <input type="text" placeholder="Quick note..." id="note-${lead.id}">
+                            <button class="btn btn-sm btn-success" onclick="addFollowupNote('${lead.id}')">Done</button>
+                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="snoozeFollowup('${lead.id}')">
+                            ⏰ Snooze
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPipeline() {
+            const leads = getLeads();
+            const stages = ['new', 'hot', 'warm', 'cold', 'converted', 'lost'];
+            const stageInfo = {
+                'new': { label: 'New', class: 'new' },
+                'hot': { label: 'Hot', class: 'hot' },
+                'warm': { label: 'Warm', class: 'warm' },
+                'cold': { label: 'Cold', class: 'cold' },
+                'converted': { label: 'Converted', class: 'converted' },
+                'lost': { label: 'Lost', class: 'lost' }
+            };
+
+            const container = document.getElementById('pipeline-container');
+            container.innerHTML = stages.map(stage => {
+                const stageLeads = leads.filter(l => l.status === stage);
+                const totalValue = stageLeads.reduce((sum, l) => sum + (l.estimatedValue || 0), 0);
+
+                return `
+                    <div class="pipeline-column ${stageInfo[stage].class}">
+                        <div class="pipeline-header">
+                            <div class="pipeline-header-content">
+                                <div>
+                                    <div class="pipeline-title">${stageInfo[stage].label}</div>
+                                    <div class="pipeline-count">${stageLeads.length} lead${stageLeads.length !== 1 ? 's' : ''}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="pipeline-value">${formatCurrency(totalValue)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pipeline-body">
+                            ${stageLeads.length ? stageLeads.map(lead => `
+                                <div class="pipeline-card" onclick="editLead('${lead.id}')">
+                                    <div class="pipeline-card-name">${lead.customerName}</div>
+                                    <div class="pipeline-card-business">${lead.businessName || '-'}</div>
+                                    <div class="pipeline-card-footer">
+                                        <span class="pipeline-card-value">${formatCurrency(lead.estimatedValue)}</span>
+                                        ${lead.followUpDate ? `<span class="pipeline-card-date ${getDaysUntil(lead.followUpDate) < 0 ? 'overdue' : ''}">${formatDate(lead.followUpDate)}</span>` : ''}
+                                    </div>
+                                </div>
+                            `).join('') : '<div class="pipeline-empty">No leads</div>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========================================
+        // FORM HANDLING
+        // ========================================
+        function resetForm() {
+            document.getElementById('lead-form').reset();
+            document.getElementById('lead-id').value = '';
+            document.getElementById('form-title').textContent = 'Add New Lead';
+            showView('dashboard');
+        }
+
+        function saveLead(event) {
+            event.preventDefault();
+
+            const leads = getLeads();
+            const leadId = document.getElementById('lead-id').value;
+
+            const leadData = {
+                customerName: document.getElementById('customerName').value.trim(),
+                mobile: document.getElementById('mobile').value.trim(),
+                businessName: document.getElementById('businessName').value.trim(),
+                city: document.getElementById('city').value,
+                source: document.getElementById('source').value,
+                productInterest: document.getElementById('productInterest').value.trim(),
+                estimatedValue: parseInt(document.getElementById('estimatedValue').value) || 0,
+                status: document.getElementById('status').value,
+                followUpDate: document.getElementById('followUpDate').value,
+                notes: document.getElementById('notes').value.trim(),
+                updatedAt: getTodayDate(),
+                followUps: []
+            };
+
+            if (leadId) {
+                // Update existing lead
+                const index = leads.findIndex(l => l.id === leadId);
+                if (index !== -1) {
+                    leadData.createdAt = leads[index].createdAt;
+                    leadData.followUps = leads[index].followUps || [];
+                    leads[index] = { ...leads[index], ...leadData };
+                }
+            } else {
+                // Create new lead
+                leadData.id = generateId();
+                leadData.createdAt = getTodayDate();
+                leads.push(leadData);
+            }
+
+            saveLeads(leads);
+            alert(leadId ? 'Lead updated successfully!' : 'Lead added successfully!');
+            resetForm();
+            showView('dashboard');
+        }
+
+        function editLead(id) {
+            const leads = getLeads();
+            const lead = leads.find(l => l.id === id);
+            if (!lead) return;
+
+            // Populate form
+            document.getElementById('lead-id').value = lead.id;
+            document.getElementById('customerName').value = lead.customerName;
+            document.getElementById('mobile').value = lead.mobile;
+            document.getElementById('businessName').value = lead.businessName || '';
+            document.getElementById('city').value = lead.city || '';
+            document.getElementById('source').value = lead.source || '';
+            document.getElementById('productInterest').value = lead.productInterest || '';
+            document.getElementById('estimatedValue').value = lead.estimatedValue || '';
+            document.getElementById('status').value = lead.status;
+            document.getElementById('followUpDate').value = lead.followUpDate || '';
+            document.getElementById('notes').value = lead.notes || '';
+
+            document.getElementById('form-title').textContent = 'Edit Lead';
+            showView('add-lead');
+        }
+
+        // ========================================
+        // DELETE HANDLING
+        // ========================================
+        let leadToDelete = null;
+
+        function showDeleteModal(id) {
+            leadToDelete = id;
+            document.getElementById('delete-modal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            leadToDelete = null;
+            document.getElementById('delete-modal').classList.remove('active');
+        }
+
+        function confirmDelete() {
+            if (!leadToDelete) return;
+
+            let leads = getLeads();
+            leads = leads.filter(l => l.id !== leadToDelete);
+            saveLeads(leads);
+
+            closeDeleteModal();
+            renderAll();
+            alert('Lead deleted successfully!');
+        }
+
+        // ========================================
+        // STATUS & FOLLOW-UP ACTIONS
+        // ========================================
+        function updateLeadStatus(id, status) {
+            const leads = getLeads();
+            const index = leads.findIndex(l => l.id === id);
+            if (index !== -1) {
+                leads[index].status = status;
+                leads[index].updatedAt = getTodayDate();
+                if (status === 'converted' || status === 'lost') {
+                    leads[index].followUpDate = null;
+                }
+                saveLeads(leads);
+                renderAll();
+                alert(`Lead marked as ${status}!`);
+            }
+        }
+
+        function addFollowupNote(id) {
+            const noteInput = document.getElementById(`note-${id}`);
+            const note = noteInput?.value.trim();
+            if (!note) {
+                alert('Please enter a note.');
+                return;
+            }
+
+            const leads = getLeads();
+            const index = leads.findIndex(l => l.id === id);
+            if (index !== -1) {
+                if (!leads[index].followUps) {
+                    leads[index].followUps = [];
+                }
+                leads[index].followUps.push({
+                    date: getTodayDate(),
+                    note: note
+                });
+
+                // Move follow-up to tomorrow
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                leads[index].followUpDate = tomorrow.toISOString().split('T')[0];
+                leads[index].updatedAt = getTodayDate();
+
+                saveLeads(leads);
+                renderAll();
+                alert('Follow-up noted and date updated!');
+            }
+        }
+
+        function snoozeFollowup(id) {
+            const leads = getLeads();
+            const index = leads.findIndex(l => l.id === id);
+            if (index !== -1) {
+                // Snooze by 1 day
+                const nextDate = new Date();
+                nextDate.setDate(nextDate.getDate() + 1);
+                leads[index].followUpDate = nextDate.toISOString().split('T')[0];
+                leads[index].updatedAt = getTodayDate();
+
+                saveLeads(leads);
+                renderAll();
+                alert('Follow-up snoozed to tomorrow!');
+            }
+        }
+
+        // ========================================
+        // WHATSAPP INTEGRATION
+        // ========================================
+        function openWhatsApp(mobile, name, product) {
+            if (!mobile) return;
+
+            const message = encodeURIComponent(
+                `Hello ${name}, this is regarding your enquiry for ${product || 'our products/services'}. When would be a good time to discuss?`
+            );
+
+            // Clean mobile number
+            const cleanMobile = mobile.replace(/\D/g, '');
+            const url = `https://wa.me/91${cleanMobile}?text=${message}`;
+
+            window.open(url, '_blank');
+        }
+
+        // ========================================
+        // SEARCH & FILTER
+        // ========================================
+        let searchTimeout;
+        function filterLeads() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderLeadsTable();
+            }, 300);
+        }
+
+        // ========================================
+        // MOBILE SIDEBAR
+        // ========================================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.querySelector('.overlay').classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.querySelector('.overlay').classList.remove('active');
+        }
+
+        // ========================================
+        // AI ASSISTANT
+        // ========================================
+        const AI_PROVIDERS_STORAGE = 'leadmitra_ai_providers';
+        const AI_ACTIVE_STORAGE = 'leadmitra_ai_active';
+        const AI_SETTINGS_STORAGE = 'leadmitra_ai_settings';
+        const AI_LEGACY_KEY_STORAGE = 'leadmitra_anthropic_key';
+        const DEFAULT_SYSTEM_PROMPT = `You are a sales assistant for a small Indian B2B business. You help prioritize leads and write short, warm, WhatsApp-friendly messages.
+
+Tone & style:
+- Be concise — messages should be under 300 characters unless asked otherwise
+- Be warm and respectful — use "ji", "namaste" when culturally appropriate
+- Default to a light Hinglish style (mix of Hindi and English in Roman script) when the lead's name suggests an Indian business owner
+- Never be pushy or use pressure tactics
+- Reference the lead's product interest or last interaction when relevant
+- Don't use markdown headers or bullet points inside message bodies
+- Don't make up facts not present in the lead's record`;
+
+        // ----- Language configuration -----
+        const LANGUAGE_CONFIG = {
+            english: {
+                label: 'English',
+                displayName: 'English',
+                instruction: 'Important: Write the entire message in English. No Hindi words, no Hinglish mix. Keep it warm and professional.'
+            },
+            hindi: {
+                label: 'हिंदी',
+                displayName: 'हिंदी',
+                instruction: 'Important: Write the entire message in Hindi using Devanagari script (हिंदी). Use respectful greetings like "नमस्ते जी". You may keep the product/brand name and the customer\'s name in English if needed. Keep it warm, concise, and WhatsApp-friendly.'
+            },
+            hinglish: {
+                label: 'Hinglish',
+                displayName: 'Hinglish',
+                instruction: 'Important: Write the message in Hinglish — Hindi words written in Roman/English letters, mixed naturally with English. Example: "Namaste ji, kya aap is weekend meeting ke liye free hain? Cotton fabric ka sample bhej deta hoon." The lead will read this on WhatsApp. Keep it warm and concise.'
+            }
+        };
+        const VALID_LANGUAGES = Object.keys(LANGUAGE_CONFIG);
+        const DEFAULT_LANGUAGE = 'hinglish';
+
+        // Tracks the language currently selected in the AI view's draft picker
+        let _currentDraftLanguage = DEFAULT_LANGUAGE;
+
+        // ----- Provider configuration -----
+        // Functions are assigned after declaration to avoid TDZ issues
+        const PROVIDERS = {
+            anthropic: {
+                name: 'Anthropic (Claude)',
+                keyPrefix: 'sk-ant-',
+                defaultModel: 'claude-sonnet-4-6',
+                models: ['claude-sonnet-4-6', 'claude-opus-4-8', 'claude-haiku-4-5-20251001'],
+                keyHint: 'Get one at <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a>.'
+            },
+            openai: {
+                name: 'OpenAI (GPT)',
+                keyPrefix: 'sk-',
+                defaultModel: 'gpt-4o-mini',
+                models: ['gpt-4o-mini', 'gpt-4o', 'gpt-4-turbo', 'gpt-3.5-turbo'],
+                keyHint: 'Get one at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>.'
+            },
+            google: {
+                name: 'Google (Gemini)',
+                keyPrefix: 'AIza',
+                defaultModel: 'gemini-1.5-flash',
+                models: ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash-exp'],
+                keyHint: 'Get one at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a>.'
+            },
+            openrouter: {
+                name: 'OpenRouter (any model)',
+                keyPrefix: 'sk-or-',
+                defaultModel: 'anthropic/claude-3.5-sonnet',
+                models: [
+                    'anthropic/claude-3.5-sonnet',
+                    'openai/gpt-4o-mini',
+                    'google/gemini-2.0-flash-exp',
+                    'meta-llama/llama-3.1-70b-instruct',
+                    'mistralai/mistral-large-latest'
+                ],
+                keyHint: 'Get one at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai</a>.'
+            }
+        };
+
+        // ----- Per-provider API call functions -----
+        // Each: takes { system, userMessage, model, jsonMode, maxTokens, key }
+        // Returns: string (the model's response text)
+        // Throws: Error with one of: NO_KEY, BAD_KEY, NETWORK, RATE_LIMIT, API_ERROR: <msg>
+
+        async function callAnthropic(opts) {
+            const body = {
+                model: opts.model,
+                max_tokens: opts.maxTokens || 1024,
+                system: opts.system,
+                messages: [{ role: 'user', content: opts.userMessage }]
+            };
+            let response;
+            try {
+                response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': opts.key,
+                        'anthropic-version': '2023-06-01',
+                        'anthropic-dangerous-direct-browser-access': 'true'
+                    },
+                    body: JSON.stringify(body)
+                });
+            } catch (err) {
+                throw new Error('NETWORK');
+            }
+            if (response.status === 401) throw new Error('BAD_KEY');
+            if (response.status === 429) throw new Error('RATE_LIMIT');
+            if (!response.ok) {
+                const msg = await extractErrorMessage(response, 'error.message');
+                throw new Error('API_ERROR: ' + msg);
+            }
+            const data = await response.json();
+            return (data.content || []).map(b => b.text || '').join('').trim();
+        }
+
+        async function callOpenAI(opts) {
+            const messages = [];
+            if (opts.system) messages.push({ role: 'system', content: opts.system });
+            messages.push({ role: 'user', content: opts.userMessage });
+            const body = {
+                model: opts.model,
+                max_tokens: opts.maxTokens || 1024,
+                messages
+            };
+            if (opts.jsonMode) {
+                body.response_format = { type: 'json_object' };
+            }
+            let response;
+            try {
+                response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + opts.key
+                    },
+                    body: JSON.stringify(body)
+                });
+            } catch (err) {
+                throw new Error('NETWORK');
+            }
+            if (response.status === 401) throw new Error('BAD_KEY');
+            if (response.status === 429) throw new Error('RATE_LIMIT');
+            if (!response.ok) {
+                const msg = await extractErrorMessage(response, 'error.message');
+                throw new Error('API_ERROR: ' + msg);
+            }
+            const data = await response.json();
+            return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+        }
+
+        async function callOpenAICompatible(opts) {
+            // OpenRouter is OpenAI-compatible but lives at a different URL and wants
+            // the recommended attribution headers. (No-key requests work too, but
+            // users with keys will get better rate limits with these headers.)
+            const messages = [];
+            if (opts.system) messages.push({ role: 'system', content: opts.system });
+            messages.push({ role: 'user', content: opts.userMessage });
+            const body = {
+                model: opts.model,
+                max_tokens: opts.maxTokens || 1024,
+                messages
+            };
+            if (opts.jsonMode) {
+                body.response_format = { type: 'json_object' };
+            }
+            let response;
+            try {
+                response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + opts.key,
+                        'HTTP-Referer': window.location.origin || 'https://leadmitra.local',
+                        'X-Title': 'LeadMitra'
+                    },
+                    body: JSON.stringify(body)
+                });
+            } catch (err) {
+                throw new Error('NETWORK');
+            }
+            if (response.status === 401) throw new Error('BAD_KEY');
+            if (response.status === 429) throw new Error('RATE_LIMIT');
+            if (!response.ok) {
+                const msg = await extractErrorMessage(response, 'error.message');
+                throw new Error('API_ERROR: ' + msg);
+            }
+            const data = await response.json();
+            return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+        }
+
+        async function callGoogle(opts) {
+            const body = {
+                contents: [{ role: 'user', parts: [{ text: opts.userMessage }] }],
+                generationConfig: { maxOutputTokens: opts.maxTokens || 1024 }
+            };
+            if (opts.system) {
+                body.systemInstruction = { parts: [{ text: opts.system }] };
+            }
+            if (opts.jsonMode) {
+                body.generationConfig.responseMimeType = 'application/json';
+            }
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(opts.model)}:generateContent?key=${encodeURIComponent(opts.key)}`;
+            let response;
+            try {
+                response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+            } catch (err) {
+                throw new Error('NETWORK');
+            }
+            if (response.status === 401 || response.status === 403) throw new Error('BAD_KEY');
+            if (response.status === 429) throw new Error('RATE_LIMIT');
+            if (!response.ok) {
+                const msg = await extractErrorMessage(response, 'error.message');
+                throw new Error('API_ERROR: ' + msg);
+            }
+            const data = await response.json();
+            const candidate = data.candidates && data.candidates[0];
+            if (!candidate || !candidate.content || !candidate.content.parts) return '';
+            return candidate.content.parts.map(p => p.text || '').join('').trim();
+        }
+
+        // Map provider IDs to their call function
+        const PROVIDER_CALLERS = {
+            anthropic: callAnthropic,
+            openai: callOpenAI,
+            google: callGoogle,
+            openrouter: callOpenAICompatible
+        };
+
+        // Helper: try to extract a useful error message from a non-OK response
+        async function extractErrorMessage(response, path) {
+            try {
+                const data = await response.json();
+                if (path) {
+                    const parts = path.split('.');
+                    let cur = data;
+                    for (const p of parts) { if (cur && typeof cur === 'object' && p in cur) cur = cur[p]; else { cur = null; break; } }
+                    if (cur) return String(cur);
+                }
+                if (data.error && data.error.message) return data.error.message;
+                return JSON.stringify(data).slice(0, 200);
+            } catch (e) {
+                return `HTTP ${response.status}`;
+            }
+        }
+
+        // ----- Dispatcher -----
+        async function callAI(userMessage, opts = {}) {
+            const activeId = getActiveProvider();
+            const providers = getAIProviders();
+            const entry = providers[activeId];
+            if (!entry || !entry.key) {
+                throw new Error('NO_KEY');
+            }
+            const providerCfg = PROVIDERS[activeId];
+            const caller = PROVIDER_CALLERS[activeId];
+            if (!caller) throw new Error('API_ERROR: Unknown provider: ' + activeId);
+
+            const systemSuffix = `\n\nWhen responding, follow this format strictly: ${opts.jsonMode ? 'return ONLY valid JSON, no markdown fences, no commentary before or after.' : 'plain text only, no markdown.'}`;
+            const system = getSystemPrompt() + systemSuffix;
+
+            const callOpts = {
+                system,
+                userMessage,
+                model: entry.model || providerCfg.defaultModel,
+                jsonMode: !!opts.jsonMode,
+                maxTokens: opts.maxTokens || 1024,
+                key: entry.key
+            };
+
+            try {
+                return await caller(callOpts);
+            } catch (err) {
+                // Clear the bad key on auth failures
+                if (err.message === 'BAD_KEY') {
+                    entry.key = '';
+                    setAIProviders(providers);
+                    if (!anyProviderConfigured()) {
+                        // No more providers — fall back to the modal
+                    } else {
+                        setActiveProvider(firstConfiguredProvider());
+                    }
+                }
+                throw err;
+            }
+        }
+
+        // ----- Settings & key storage -----
+        function getAIProviders() {
+            try {
+                const raw = localStorage.getItem(AI_PROVIDERS_STORAGE);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed === 'object') return parsed;
+                }
+            } catch (e) {}
+            return {};
+        }
+        function setAIProviders(p) {
+            localStorage.setItem(AI_PROVIDERS_STORAGE, JSON.stringify(p));
+        }
+        function getActiveProvider() {
+            const stored = localStorage.getItem(AI_ACTIVE_STORAGE);
+            if (stored && PROVIDERS[stored]) return stored;
+            // Default to the first configured provider, or 'anthropic' if none
+            const configured = firstConfiguredProvider();
+            return configured || 'anthropic';
+        }
+        function setActiveProvider(id) {
+            if (PROVIDERS[id]) localStorage.setItem(AI_ACTIVE_STORAGE, id);
+        }
+        function getProviderEntry(id) {
+            return getAIProviders()[id] || null;
+        }
+        function setProviderEntry(id, entry) {
+            const all = getAIProviders();
+            all[id] = entry;
+            setAIProviders(all);
+        }
+        function removeProviderEntry(id) {
+            const all = getAIProviders();
+            delete all[id];
+            setAIProviders(all);
+            // If we just removed the active provider, switch to another configured one
+            if (getActiveProvider() === id) {
+                const next = firstConfiguredProvider();
+                if (next) setActiveProvider(next);
+                else localStorage.removeItem(AI_ACTIVE_STORAGE);
+            }
+        }
+        function anyProviderConfigured() {
+            const all = getAIProviders();
+            return Object.values(all).some(e => e && e.key);
+        }
+        function firstConfiguredProvider() {
+            const all = getAIProviders();
+            for (const id of Object.keys(PROVIDERS)) {
+                if (all[id] && all[id].key) return id;
+            }
+            return null;
+        }
+        function getAISettings() {
+            try {
+                const raw = localStorage.getItem(AI_SETTINGS_STORAGE);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed === 'object') return parsed;
+                }
+            } catch (e) {}
+            return { systemPrompt: DEFAULT_SYSTEM_PROMPT, defaultLanguage: DEFAULT_LANGUAGE };
+        }
+        function setAISettings(settings) {
+            localStorage.setItem(AI_SETTINGS_STORAGE, JSON.stringify(settings));
+        }
+        function getSystemPrompt() {
+            const s = getAISettings();
+            return (s.systemPrompt && s.systemPrompt.trim()) || DEFAULT_SYSTEM_PROMPT;
+        }
+        function getDefaultLanguage() {
+            const s = getAISettings();
+            const lang = s.defaultLanguage;
+            if (lang && VALID_LANGUAGES.includes(lang)) return lang;
+            return DEFAULT_LANGUAGE;
+        }
+
+        // ----- Migration: old single-key localStorage -> new per-provider shape -----
+        function migrateLegacyKey() {
+            const legacy = localStorage.getItem(AI_LEGACY_KEY_STORAGE);
+            if (!legacy) return;
+            const all = getAIProviders();
+            if (!all.anthropic || !all.anthropic.key) {
+                all.anthropic = { key: legacy, model: PROVIDERS.anthropic.defaultModel };
+                setAIProviders(all);
+                if (!localStorage.getItem(AI_ACTIVE_STORAGE)) {
+                    setActiveProvider('anthropic');
+                }
+            }
+            localStorage.removeItem(AI_LEGACY_KEY_STORAGE);
+        }
+
+        // ----- Toast -----
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show' + (type ? ' ' + type : '');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.className = 'toast';
+            }, 3500);
+        }
+
+        // ----- Test a specific provider's key -----
+        async function testProviderKey(providerId, key, model) {
+            setProviderEntry(providerId, { key, model: model || PROVIDERS[providerId].defaultModel });
+            setActiveProvider(providerId);
+            try {
+                await callAI('Reply with the single word: ok', { maxTokens: 8 });
+                return { ok: true };
+            } catch (err) {
+                if (err.message === 'BAD_KEY') return { ok: false, error: 'Invalid API key. Check it and try again.' };
+                if (err.message === 'NETWORK') return { ok: false, error: 'Couldn\'t reach the API. Check your internet connection.' };
+                if (err.message === 'RATE_LIMIT') return { ok: true, warning: 'Key works, but you\'re being rate-limited. Try again in a moment.' };
+                if (err.message && err.message.startsWith('API_ERROR')) {
+                    return { ok: false, error: err.message.replace('API_ERROR: ', '') };
+                }
+                return { ok: false, error: err.message || 'Unknown error' };
+            }
+        }
+
+        // ----- Key modal -----
+        let _modalSelectedProvider = null;
+
+        function openKeyModal() {
+            const select = document.getElementById('ai-provider-select');
+            // Populate the provider dropdown the first time
+            if (select.options.length === 0) {
+                select.innerHTML = Object.keys(PROVIDERS).map(id =>
+                    `<option value="${id}">${PROVIDERS[id].name}</option>`
+                ).join('');
+                select.addEventListener('change', onProviderChange);
+            }
+            // Default: the active provider if configured, else the first one with a key, else anthropic
+            const configured = firstConfiguredProvider();
+            _modalSelectedProvider = (configured) || getActiveProvider();
+            select.value = _modalSelectedProvider;
+            onProviderChange();
+            renderSavedKeysList();
+            document.getElementById('ai-key-modal-status').textContent = '';
+            document.getElementById('ai-key-modal-status').className = 'key-status';
+            document.getElementById('ai-key-modal').classList.add('active');
+            setTimeout(() => document.getElementById('ai-key-input').focus(), 100);
+        }
+
+        function closeKeyModal() {
+            document.getElementById('ai-key-modal').classList.remove('active');
+        }
+
+        function onProviderChange() {
+            const id = document.getElementById('ai-provider-select').value;
+            _modalSelectedProvider = id;
+            const cfg = PROVIDERS[id];
+            // Update the model dropdown
+            const modelSel = document.getElementById('ai-model-select');
+            const existing = getProviderEntry(id);
+            const currentModel = (existing && existing.model) || cfg.defaultModel;
+            modelSel.innerHTML = cfg.models.map(m => `<option value="${m}">${m}</option>`).join('');
+            if (cfg.models.includes(currentModel)) {
+                modelSel.value = currentModel;
+            } else {
+                modelSel.value = cfg.defaultModel;
+            }
+            // Show existing key (or blank)
+            document.getElementById('ai-key-input').value = (existing && existing.key) || '';
+            // Update the hint link
+            document.getElementById('ai-key-hint').innerHTML = cfg.keyHint;
+            // Clear status
+            const status = document.getElementById('ai-key-modal-status');
+            status.textContent = '';
+            status.className = 'key-status';
+        }
+
+        async function saveAndTestKey() {
+            const providerId = document.getElementById('ai-provider-select').value;
+            const input = document.getElementById('ai-key-input');
+            const model = document.getElementById('ai-model-select').value;
+            const status = document.getElementById('ai-key-modal-status');
+            const btn = document.getElementById('ai-key-save-btn');
+            const key = input.value.trim();
+
+            const cfg = PROVIDERS[providerId];
+
+            if (!key) {
+                status.className = 'key-status error';
+                status.textContent = 'Please enter a key.';
+                return;
+            }
+            // Prefix check — generous: OpenRouter starts with sk-or-, OpenAI with sk- (and so do old OpenRouter keys).
+            // We try to be helpful without being annoying.
+            if (providerId === 'openai' && key.startsWith('sk-or-')) {
+                status.className = 'key-status error';
+                status.innerHTML = 'That looks like an OpenRouter key. Switch the provider to <strong>OpenRouter</strong> above.';
+                return;
+            }
+            if (providerId === 'openrouter' && !key.startsWith('sk-or-')) {
+                status.className = 'key-status error';
+                status.textContent = 'OpenRouter keys start with sk-or-.';
+                return;
+            }
+            if (providerId === 'anthropic' && !key.startsWith('sk-ant-')) {
+                status.className = 'key-status error';
+                status.textContent = 'Anthropic keys start with sk-ant-.';
+                return;
+            }
+            if (providerId === 'google' && !key.startsWith('AIza')) {
+                status.className = 'key-status error';
+                status.textContent = 'Google AI keys usually start with AIza.';
+                return;
+            }
+
+            status.className = 'key-status testing';
+            status.innerHTML = 'Testing<span class="loading-dots"><span></span><span></span><span></span></span>';
+            btn.disabled = true;
+
+            const result = await testProviderKey(providerId, key, model);
+            btn.disabled = false;
+
+            if (result.ok) {
+                status.className = 'key-status success';
+                status.textContent = result.warning ? '✓ ' + result.warning : '✓ Key works! Connected to ' + cfg.name + '.';
+                renderSavedKeysList();
+                setTimeout(() => {
+                    closeKeyModal();
+                    renderAIView();
+                    showToast('Connected to ' + cfg.name, 'success');
+                }, 1200);
+            } else {
+                status.className = 'key-status error';
+                status.textContent = '✗ ' + result.error;
+                // If test failed, keep the key cleared (we already cleared it on BAD_KEY inside the caller)
+                const remaining = getProviderEntry(providerId);
+                if (remaining && !remaining.key) {
+                    // Don't leave an empty entry around
+                    removeProviderEntry(providerId);
+                    renderSavedKeysList();
+                }
+            }
+        }
+
+        function renderSavedKeysList() {
+            const container = document.getElementById('ai-saved-list');
+            const all = getAIProviders();
+            const activeId = getActiveProvider();
+            const entries = Object.keys(all).filter(id => all[id] && all[id].key);
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="ai-saved-list-empty">No keys saved yet. Add one above to get started.</div>';
+                return;
+            }
+            container.innerHTML = entries.map(id => {
+                const e = all[id];
+                const isActive = id === activeId && anyProviderConfigured();
+                return `
+                    <div class="ai-saved-item ${isActive ? 'active' : ''}">
+                        <div class="ai-saved-item-name">
+                            ${escapeHtml(PROVIDERS[id].name)}
+                            ${isActive ? '<span class="ai-saved-item-active-badge">• active</span>' : ''}
+                        </div>
+                        <div class="ai-saved-item-model">${escapeHtml(e.model || PROVIDERS[id].defaultModel)}</div>
+                        ${!isActive ? `<button class="ai-saved-item-use" onclick="useProvider('${id}')">Use</button>` : ''}
+                        <button class="ai-saved-item-remove" onclick="removeProvider('${id}')" title="Remove this key">✕</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function useProvider(id) {
+            setActiveProvider(id);
+            renderAIView();
+            renderSavedKeysList();
+            showToast('Switched to ' + PROVIDERS[id].name, 'success');
+        }
+
+        function removeProvider(id) {
+            const cfg = PROVIDERS[id];
+            if (!confirm(`Remove your ${cfg.name} key?`)) return;
+            removeProviderEntry(id);
+            renderSavedKeysList();
+            renderAIView();
+            showToast(cfg.name + ' key removed', 'warning');
+        }
+
+        function clearAllProviders() {
+            if (!confirm('Disconnect all AI providers and forget every saved key?')) return;
+            setAIProviders({});
+            localStorage.removeItem(AI_ACTIVE_STORAGE);
+            renderSavedKeysList();
+            renderAIView();
+            showToast('All providers disconnected', 'warning');
+        }
+
+        // ----- AI Assistant view rendering -----
+        function renderAIView() {
+            const banner = document.getElementById('ai-key-banner');
+            const all = getAIProviders();
+            const activeId = getActiveProvider();
+            const activeEntry = all[activeId];
+            const anyConfigured = anyProviderConfigured();
+
+            if (anyConfigured && activeEntry && activeEntry.key) {
+                // Build the active-provider options for the inline switcher
+                const configuredIds = Object.keys(all).filter(id => all[id] && all[id].key);
+                const switcherOptions = configuredIds.map(id =>
+                    `<option value="${id}" ${id === activeId ? 'selected' : ''}>${escapeHtml(PROVIDERS[id].name)} — ${escapeHtml(all[id].model || PROVIDERS[id].defaultModel)}</option>`
+                ).join('');
+
+                banner.innerHTML = `
+                    <div class="ai-key-banner connected">
+                        <div style="font-size: 20px;">✓</div>
+                        <div class="ai-key-banner-content">
+                            <div class="ai-key-banner-title">Connected to ${escapeHtml(PROVIDERS[activeId].name)}</div>
+                            <div class="ai-key-banner-sub">Model: <span style="font-family: 'SF Mono', Menlo, monospace;">${escapeHtml(activeEntry.model || PROVIDERS[activeId].defaultModel)}</span></div>
+                        </div>
+                        <div class="ai-provider-switcher">
+                            <span style="font-size: 12px; opacity: 0.8;">Switch:</span>
+                            <select onchange="useProvider(this.value)" title="Switch active provider">
+                                ${switcherOptions}
+                            </select>
+                        </div>
+                        <button onclick="openKeyModal()">Manage keys</button>
+                    </div>
+                `;
+            } else {
+                banner.innerHTML = `
+                    <div class="ai-key-banner empty">
+                        <div style="font-size: 20px;">🔑</div>
+                        <div class="ai-key-banner-content">
+                            <div class="ai-key-banner-title">Add an AI provider to start</div>
+                            <div class="ai-key-banner-sub">Supports Anthropic (Claude), OpenAI (GPT), Google (Gemini), and OpenRouter. Keys are stored only in this browser.</div>
+                        </div>
+                        <button onclick="openKeyModal()">Add a key</button>
+                    </div>
+                `;
+            }
+
+            // Populate lead dropdown
+            const leads = getLeads().filter(l => !['converted', 'lost'].includes(l.status));
+            const select = document.getElementById('ai-lead-select');
+            const current = select.value;
+            select.innerHTML = '<option value="">Choose a lead...</option>' +
+                leads.map(l => {
+                    const flag = (l.followUps && l.followUps.length) ? ' • has follow-ups' : '';
+                    return `<option value="${l.id}">${l.customerName} (${getStatusLabel(l.status)})${flag}</option>`;
+                }).join('');
+            if (current) select.value = current;
+
+            // System prompt textarea
+            const ta = document.getElementById('ai-system-prompt');
+            if (!ta.dataset.initialized) {
+                ta.value = getSystemPrompt();
+                ta.dataset.initialized = 'true';
+            }
+            document.getElementById('ai-instructions-status').textContent = '';
+
+            // Sync the language segmented controls
+            const defLang = getDefaultLanguage();
+            _currentDraftLanguage = defLang;
+            syncLangPicker('ai-lang-picker', defLang);
+            syncLangPicker('ai-default-lang', defLang);
+        }
+
+        function syncLangPicker(containerId, lang) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.querySelectorAll('button[data-lang]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
+
+        function pickDraftLanguage(lang) {
+            if (!VALID_LANGUAGES.includes(lang)) return;
+            _currentDraftLanguage = lang;
+            syncLangPicker('ai-lang-picker', lang);
+        }
+
+        function pickDefaultLanguage(lang) {
+            if (!VALID_LANGUAGES.includes(lang)) return;
+            // Optimistic UI update
+            syncLangPicker('ai-default-lang', lang);
+            _currentDraftLanguage = lang;
+            syncLangPicker('ai-lang-picker', lang);
+            // Persist
+            const settings = getAISettings();
+            settings.defaultLanguage = lang;
+            setAISettings(settings);
+            const status = document.getElementById('ai-instructions-status');
+            status.textContent = '✓ Default language set to ' + LANGUAGE_CONFIG[lang].displayName;
+            setTimeout(() => {
+                if (status.textContent.startsWith('✓ Default language')) status.textContent = '';
+            }, 2500);
+        }
+
+        function saveSystemPrompt() {
+            const ta = document.getElementById('ai-system-prompt');
+            const value = ta.value.trim();
+            if (!value) {
+                showToast('Instructions can\'t be empty', 'error');
+                return;
+            }
+            const settings = getAISettings();
+            settings.systemPrompt = value;
+            setAISettings(settings);
+            const status = document.getElementById('ai-instructions-status');
+            status.textContent = '✓ Saved';
+            setTimeout(() => { status.textContent = ''; }, 2000);
+        }
+
+        function resetSystemPrompt() {
+            if (confirm('Reset custom instructions to the default?')) {
+                const ta = document.getElementById('ai-system-prompt');
+                ta.value = DEFAULT_SYSTEM_PROMPT;
+                const settings = getAISettings();
+                settings.systemPrompt = DEFAULT_SYSTEM_PROMPT;
+                setAISettings(settings);
+                const status = document.getElementById('ai-instructions-status');
+                status.textContent = '✓ Reset to default';
+                setTimeout(() => { status.textContent = ''; }, 2000);
+            }
+        }
+
+        // ----- Daily Briefing -----
+        async function getBriefing() {
+            if (!anyProviderConfigured()) { openKeyModal(); return; }
+
+            const leads = getLeads();
+            if (!leads.length) {
+                document.getElementById('briefing-output').innerHTML =
+                    '<div class="empty-state"><p>Add some leads first, then I\'ll help you prioritize them.</p></div>';
+                return;
+            }
+
+            const btn = document.getElementById('briefing-btn');
+            const output = document.getElementById('briefing-output');
+            btn.disabled = true;
+            const activeId = getActiveProvider();
+            btn.innerHTML = `Asking ${PROVIDERS[activeId].name.split(' ')[0]}<span class="loading-dots"><span></span><span></span><span></span></span>`;
+            output.innerHTML = '';
+
+            const today = getTodayDate();
+            const leadSummary = leads.map(l => ({
+                id: l.id,
+                name: l.customerName,
+                city: l.city || '',
+                source: l.source || '',
+                status: l.status,
+                value: l.estimatedValue || 0,
+                product: l.productInterest || '',
+                followUpDate: l.followUpDate || null,
+                lastNote: (l.followUps && l.followUps.length) ? l.followUps[l.followUps.length - 1].note : (l.notes || ''),
+                updatedAt: l.updatedAt
+            }));
+
+            const userMsg = `Today is ${today}. Here are my leads as JSON:
+
+${JSON.stringify(leadSummary, null, 0)}
+
+Based on this, return a JSON object with this EXACT shape:
+{
+  "topLeads": [
+    {"id": "<lead id>", "name": "<name>", "reason": "<one short sentence why>", "suggestedAction": "<one short action>"}
+  ],
+  "slipping": ["<lead name> - <one short sentence>"],
+  "insight": "<one strategic observation, max 2 sentences>"
+}
+
+Pick 3 topLeads. Focus on hot/warm leads with upcoming or overdue follow-ups. For 'slipping', list any overdue follow-ups or stale leads (no contact in 7+ days) the user is ignoring. 'insight' should be a non-obvious pattern or opportunity.`;
+
+            try {
+                const text = await callAI(userMsg, { jsonMode: true, maxTokens: 1200 });
+                const parsed = parseAIJson(text);
+                if (!parsed || !parsed.topLeads) {
+                    output.innerHTML = `<div class="empty-state"><p>Couldn't parse the response. Raw:</p><pre style="text-align:left;font-size:12px;white-space:pre-wrap;background:var(--bg-main);padding:12px;border-radius:6px;margin-top:8px;">${escapeHtml(text)}</pre></div>`;
+                    return;
+                }
+                renderBriefing(parsed);
+            } catch (err) {
+                handleAIError(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '✨ What should I do today?';
+            }
+        }
+
+        function renderBriefing(data) {
+            const output = document.getElementById('briefing-output');
+            const leads = getLeads();
+            const leadMap = new Map(leads.map(l => [l.id, l]));
+
+            let html = '<div class="briefing-list">';
+            (data.topLeads || []).slice(0, 3).forEach((item, i) => {
+                const lead = leadMap.get(item.id);
+                if (!lead) return;
+                html += `
+                    <div class="briefing-item priority-${i + 1}">
+                        <div class="briefing-item-num">${i + 1}</div>
+                        <div class="briefing-item-content">
+                            <div class="briefing-item-name">${escapeHtml(item.name)}</div>
+                            <div class="briefing-item-reason">${escapeHtml(item.reason || '')}</div>
+                            <div class="briefing-item-action">→ ${escapeHtml(item.suggestedAction || '')}</div>
+                            <div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">
+                                <button class="btn btn-sm btn-ai" onclick="openAIDraftModal('${lead.id}', 'followup')">✨ Draft follow-up</button>
+                                <button class="btn btn-sm btn-whatsapp" onclick="openWhatsApp('${lead.mobile}', '${escapeAttr(lead.customerName)}', '${escapeAttr(lead.productInterest || '')}')">💬 WhatsApp</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            if (data.slipping && data.slipping.length) {
+                html += `<div class="briefing-slipping"><strong>⚠️ Slipping through the cracks:</strong><ul style="margin: 6px 0 0 20px; padding: 0;">${data.slipping.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul></div>`;
+            }
+            if (data.insight) {
+                html += `<div class="briefing-insight"><strong>💡 Insight:</strong> ${escapeHtml(data.insight)}</div>`;
+            }
+
+            output.innerHTML = html;
+        }
+
+        function parseAIJson(text) {
+            let cleaned = text.trim();
+            const fenceMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)```/);
+            if (fenceMatch) cleaned = fenceMatch[1].trim();
+            try {
+                return JSON.parse(cleaned);
+            } catch (e) {
+                const start = cleaned.indexOf('{');
+                const end = cleaned.lastIndexOf('}');
+                if (start !== -1 && end !== -1 && end > start) {
+                    try { return JSON.parse(cleaned.substring(start, end + 1)); } catch (e2) {}
+                }
+                return null;
+            }
+        }
+
+        // ----- Draft a message -----
+        async function draftFirstMessage() {
+            const leadId = document.getElementById('ai-lead-select').value;
+            if (!leadId) { showToast('Pick a lead first', 'warning'); return; }
+            await generateDraft(leadId, 'first', _currentDraftLanguage);
+        }
+        async function draftFollowup() {
+            const leadId = document.getElementById('ai-lead-select').value;
+            if (!leadId) { showToast('Pick a lead first', 'warning'); return; }
+            await generateDraft(leadId, 'followup', _currentDraftLanguage);
+        }
+
+        async function inlineDraftMessage(leadId) {
+            const lead = getLeads().find(l => l.id === leadId);
+            if (!lead) return;
+            const hasHistory = lead.followUps && lead.followUps.length > 0;
+            await generateDraft(leadId, hasHistory ? 'followup' : 'first', getDefaultLanguage());
+        }
+        async function inlineDraftFollowup(leadId) {
+            await generateDraft(leadId, 'followup', getDefaultLanguage());
+        }
+
+        async function generateDraft(leadId, mode, language) {
+            if (!anyProviderConfigured()) { openKeyModal(); return; }
+
+            const lead = getLeads().find(l => l.id === leadId);
+            if (!lead) { showToast('Lead not found', 'error'); return; }
+
+            const lang = VALID_LANGUAGES.includes(language) ? language : DEFAULT_LANGUAGE;
+            const langCfg = LANGUAGE_CONFIG[lang];
+
+            openAIDraftModal(leadId, mode, lang, true);
+
+            const leadJson = JSON.stringify({
+                name: lead.customerName,
+                business: lead.businessName || '',
+                city: lead.city || '',
+                source: lead.source || '',
+                product: lead.productInterest || '',
+                value: lead.estimatedValue || 0,
+                status: lead.status,
+                notes: lead.notes || '',
+                followUps: lead.followUps || []
+            });
+
+            const modeLine = mode === 'first'
+                ? 'Draft the FIRST outreach message for this lead.'
+                : 'Draft a FOLLOW-UP message for this lead. The lead has been contacted before — reference the last interaction briefly without repeating it.';
+
+            const userMsg = `${modeLine}
+
+${langCfg.instruction}
+
+Return ONLY a JSON object with this EXACT shape, no commentary:
+{"text": "<message, max 300 chars>"}
+
+Lead: ${leadJson}`;
+
+            try {
+                const text = await callAI(userMsg, { jsonMode: true, maxTokens: 400 });
+                const parsed = parseAIJson(text);
+                if (!parsed || typeof parsed.text !== 'string') {
+                    showAIDraftResult(null, null, null, text);
+                    return;
+                }
+                showAIDraftResult(null, null, parsed.text);
+            } catch (err) {
+                handleAIError(err);
+            }
+        }
+
+        function openAIDraftModal(leadId, mode, language, isLoading = false) {
+            const lead = getLeads().find(l => l.id === leadId);
+            if (!lead) return;
+            currentDraftLead = lead;
+            currentDraftMode = mode;
+            currentDraftLanguage = language || DEFAULT_LANGUAGE;
+
+            const modal = document.getElementById('ai-modal');
+            const title = document.getElementById('ai-modal-title');
+            const ctx = document.getElementById('ai-modal-context');
+            const drafts = document.getElementById('ai-modal-drafts');
+
+            const activeId = getActiveProvider();
+            const activeName = PROVIDERS[activeId] ? PROVIDERS[activeId].name : 'AI';
+            const langCfg = LANGUAGE_CONFIG[currentDraftLanguage] || LANGUAGE_CONFIG[DEFAULT_LANGUAGE];
+            title.textContent = (mode === 'first' ? '✨ First message draft' : '✨ Follow-up draft')
+                + ' · ' + langCfg.displayName + ' · ' + activeName;
+
+            ctx.innerHTML = `
+                <div class="ai-modal-context-row"><span class="ai-modal-context-label">Lead:</span><span><strong>${escapeHtml(lead.customerName)}</strong>${lead.businessName ? ' • ' + escapeHtml(lead.businessName) : ''}</span></div>
+                <div class="ai-modal-context-row"><span class="ai-modal-context-label">Status:</span><span>${getStatusLabel(lead.status)}</span></div>
+                ${lead.productInterest ? `<div class="ai-modal-context-row"><span class="ai-modal-context-label">Interest:</span><span>${escapeHtml(lead.productInterest)}</span></div>` : ''}
+                ${lead.city ? `<div class="ai-modal-context-row"><span class="ai-modal-context-label">City:</span><span>${escapeHtml(lead.city)}</span></div>` : ''}
+            `;
+
+            if (isLoading) {
+                drafts.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">Drafting<span class="loading-dots"><span></span><span></span><span></span></span></div>';
+            } else {
+                drafts.innerHTML = '';
+            }
+
+            modal.classList.add('active');
+        }
+
+        let currentDraftLead = null;
+        let currentDraftMode = null;
+        let currentDraftLanguage = DEFAULT_LANGUAGE;
+
+        function showAIDraftResult(leadId, mode, text, rawText) {
+            const drafts = document.getElementById('ai-modal-drafts');
+            if (typeof text !== 'string' || !text) {
+                drafts.innerHTML = `<div class="empty-state"><p>Couldn't parse the draft. The model said:</p><pre style="text-align:left;font-size:12px;white-space:pre-wrap;background:var(--bg-main);padding:12px;border-radius:6px;margin-top:8px;">${escapeHtml(rawText || '(no response)')}</pre></div>`;
+                return;
+            }
+            drafts.innerHTML = `
+                <div class="ai-draft-block">
+                    <div class="ai-draft-label">
+                        <span>${escapeHtml(LANGUAGE_CONFIG[currentDraftLanguage]?.displayName || 'Draft')}</span>
+                        <span style="text-transform: none; font-weight: 400; color: var(--text-secondary);">${text.length} chars</span>
+                    </div>
+                    <textarea class="ai-draft-textarea" data-variant-idx="0">${escapeHtml(text)}</textarea>
+                    <div class="ai-draft-actions" style="margin-top: 8px;">
+                        <button class="btn btn-sm btn-secondary" onclick="copyDraft(0)">📋 Copy</button>
+                        <button class="btn btn-sm btn-whatsapp" onclick="sendDraftToWhatsApp(0)">💬 Open in WhatsApp</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function copyDraft(idx) {
+            const ta = document.querySelector(`#ai-modal-drafts textarea[data-variant-idx="${idx}"]`);
+            if (!ta) return;
+            ta.select();
+            try {
+                navigator.clipboard.writeText(ta.value).then(() => {
+                    showToast('Copied to clipboard', 'success');
+                }).catch(() => {
+                    document.execCommand('copy');
+                    showToast('Copied to clipboard', 'success');
+                });
+            } catch (e) {
+                document.execCommand('copy');
+                showToast('Copied to clipboard', 'success');
+            }
+        }
+
+        function sendDraftToWhatsApp(idx) {
+            const ta = document.querySelector(`#ai-modal-drafts textarea[data-variant-idx="${idx}"]`);
+            if (!ta || !currentDraftLead) return;
+            const text = ta.value;
+            const lead = currentDraftLead;
+            const cleanMobile = (lead.mobile || '').replace(/\D/g, '');
+            if (!cleanMobile) { showToast('No mobile number on file', 'error'); return; }
+            const url = `https://wa.me/91${cleanMobile}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function closeAIModal() {
+            document.getElementById('ai-modal').classList.remove('active');
+            currentDraftLead = null;
+            currentDraftMode = null;
+        }
+
+        // ----- Error handling -----
+        function handleAIError(err) {
+            const msg = err.message;
+            const activeId = getActiveProvider();
+            const providerName = PROVIDERS[activeId] ? PROVIDERS[activeId].name : 'AI provider';
+            if (msg === 'NO_KEY') { openKeyModal(); return; }
+            if (msg === 'BAD_KEY') {
+                showToast(providerName + ' key invalid — please re-enter', 'error');
+                renderAIView();
+                return;
+            }
+            if (msg === 'NETWORK') {
+                showToast('Couldn\'t reach ' + providerName + ' — check your connection', 'error');
+                return;
+            }
+            if (msg === 'RATE_LIMIT') {
+                showToast('Rate-limited by ' + providerName + ' — try another provider or wait a moment', 'warning');
+                return;
+            }
+            if (msg && msg.startsWith('API_ERROR')) {
+                showToast(providerName + ' error: ' + msg.replace('API_ERROR: ', ''), 'error');
+                return;
+            }
+            showToast('Something went wrong: ' + (msg || 'unknown'), 'error');
+        }
+
+        // ----- HTML escaping helpers -----
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+        function escapeAttr(str) {
+            return escapeHtml(str);
+        }
+
+        // ========================================
+        // WELCOME OVERLAY (one-time, first visit)
+        // ========================================
+        const WELCOME_KEY = 'leadmitra_welcomed';
+
+        function showWelcomeIfNeeded() {
+            try {
+                if (localStorage.getItem(WELCOME_KEY)) return;
+            } catch (e) { return; }
+            document.getElementById('welcome-modal').classList.add('active');
+        }
+
+        function dismissWelcome() {
+            try { localStorage.setItem(WELCOME_KEY, '1'); } catch (e) {}
+            document.getElementById('welcome-modal').classList.remove('active');
+        }
+
+        function startWithDemo() {
+            // Reset to fresh demo data
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            saveLeads(DEMO_DATA);
+            showView('dashboard');
+            renderAll();
+            showToast('Loaded 15 demo leads — explore freely!', 'success');
+            dismissWelcome();
+        }
+
+        function startFresh() {
+            // Empty leads array, no demo seed
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+            } catch (e) {}
+            showView('dashboard');
+            renderAll();
+            showToast('Started fresh. Add your first lead!', 'success');
+            dismissWelcome();
+        }
+
+        // ========================================
+        // EXPORT / IMPORT (portability)
+        // ========================================
+        const BACKUP_VERSION = 1;
+
+        function exportLeads() {
+            try {
+                const payload = {
+                    app: 'LeadMitra',
+                    version: BACKUP_VERSION,
+                    exportedAt: new Date().toISOString(),
+                    leads: getLeads(),
+                    aiProviders: getAIProviders(),
+                    aiActive: localStorage.getItem(AI_ACTIVE_STORAGE) || null,
+                    aiSettings: getAISettings()
+                };
+                const json = JSON.stringify(payload, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const today = getTodayDate();
+                a.href = url;
+                a.download = `leadmitra-backup-${today}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                showToast('Backup downloaded', 'success');
+            } catch (err) {
+                console.error('Export failed:', err);
+                showToast('Export failed: ' + (err.message || 'unknown'), 'error');
+            }
+        }
+
+        function importLeads(event) {
+            const file = event.target.files && event.target.files[0];
+            // Reset the input so the same file can be picked again later
+            event.target.value = '';
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!data || typeof data !== 'object') throw new Error('Not a JSON object');
+                    if (data.app !== 'LeadMitra') {
+                        if (!confirm("This file doesn't look like a LeadMitra backup. Import anyway?")) return;
+                    }
+                    let leads = Array.isArray(data.leads) ? data.leads : null;
+                    if (leads === null) throw new Error('Missing "leads" array in backup');
+                    // Confirm overwrite
+                    const existing = getLeads();
+                    if (existing.length > 0 && !confirm(`This will replace your current ${existing.length} lead(s) with ${leads.length} from the backup. Continue?`)) {
+                        return;
+                    }
+                    saveLeads(leads);
+                    // Restore AI provider config if present
+                    if (data.aiProviders && typeof data.aiProviders === 'object') {
+                        setAIProviders(data.aiProviders);
+                    }
+                    if (data.aiActive) {
+                        localStorage.setItem(AI_ACTIVE_STORAGE, data.aiActive);
+                    }
+                    if (data.aiSettings && typeof data.aiSettings === 'object') {
+                        setAISettings(data.aiSettings);
+                    }
+                    renderAll();
+                    showToast(`Imported ${leads.length} lead(s)`, 'success');
+                } catch (err) {
+                    console.error('Import failed:', err);
+                    showToast('Import failed: ' + (err.message || 'invalid file'), 'error');
+                }
+            };
+            reader.onerror = () => showToast('Could not read file', 'error');
+            reader.readAsText(file);
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Migrate legacy single-key storage (one-time)
+            migrateLegacyKey();
+            // Initialize with demo data if empty
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                saveLeads(DEMO_DATA);
+            }
+            renderDashboard();
+            // First-visit welcome overlay (one-time)
+            showWelcomeIfNeeded();
+        });
+    </script>
+</body>
+</html>
